@@ -5,6 +5,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import HighQualityIcon from '@mui/icons-material/HighQuality';
 import BoltIcon from '@mui/icons-material/Bolt';
 import ShieldIcon from '@mui/icons-material/Shield';
+import Image from "next/image";
 
 export default function Home() {
     const [darkMode, setDarkMode] = useState(false);
@@ -48,15 +49,33 @@ export default function Home() {
                     <div className="flex items-center h-16 justify-evenly">
                         <div className="absolute hidden left-4 sm:block">
                             {darkMode ? (
-                                <img src="/logo-dark.png" alt="GrabTube Logo" className="h-12" />
+                                <Image
+                                    src="/logo-dark.png"
+                                    alt="GrabTube Logo"
+                                    width={350}
+                                    height={196}
+                                    className="h-12 w-auto"
+                                />
                             ) : (
-                                <img src="/logo-light.png" alt="GrabTube Logo" className="h-12" />
+                                <Image
+                                    src="/logo-light.png"
+                                    alt="GrabTube Logo"
+                                    width={350}
+                                    height={196}
+                                    className="h-12 w-auto"
+                                />
                             )
 
                             }
                         </div>
                         <div className="flex items-center justify-center flex-shrink-0 space-x-2">
-                            <img src="/logo-symbol.png" alt="GrabTube Logo" className="h-6 mr-4 sm:hidden" />
+                            <Image
+                                src="/logo-symbol.png"
+                                alt="GrabTube Logo"
+                                width={140}
+                                height={124}
+                                className="h-6 w-auto mr-4 sm:hidden"
+                            />
                             <span className="text-2xl font-bold text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text">
                                 GrabTube
                             </span>
@@ -92,14 +111,14 @@ export default function Home() {
 
 
                     <div className="relative group">
-                        <div className="absolute transition duration-1000 -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl opacity-20 blur group-hover:opacity-40"></div>
-                        <div className="relative p-1 bg-white shadow-xl dark:bg-gray-800 rounded-2xl">
-                            <div className="flex flex-col items-center gap-2 p-2 sm:flex-row bg-gray-50 dark:bg-gray-900/30 rounded-xl">
+                        <div className="absolute transition duration-1000 -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl opacity-20 blur group-hover:opacity-50"></div>
+                        <div className="relative p-1 bg-gray-100 shadow-xl dark:bg-gray-800 rounded-2xl duration-300 transition-all group-focus-within:bg-gray-400 dark:group-focus-within:bg-gray-600">
+                            <div className="flex flex-col items-center gap-2 p-2 sm:flex-row bg-gray-50 dark:bg-gray-900/80 rounded-xl">
                                 <input
                                     type="text"
                                     placeholder="Paste YouTube URL here"
                                     required
-                                    className="w-full px-6 py-4 text-gray-900 placeholder-gray-400 bg-transparent border-0 focus:ring-0 dark:text-white"
+                                    className="outline-none w-full px-6 py-4 text-gray-900 placeholder-gray-400 bg-transparent border-0 focus:ring-0 dark:text-white"
                                 />
                                 <button className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg transition-all transform hover:scale-[1.02] active:scale-95">
                                     Download Now
@@ -108,6 +127,8 @@ export default function Home() {
                         </div>
                     </div>
 
+
+                    {/* Cards */}
                     <div className="grid grid-cols-1 gap-8 mt-12 text-left sm:grid-cols-3">
                         <div className="p-6 hover:scale-[1.02] transition-all bg-white shadow-sm dark:bg-gray-800 rounded-xl hover:shadow-md">
                             <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
