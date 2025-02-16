@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --background: #ffffff;
+    --foreground: #171717;
+}
+
+/* Override when dark mode is active */
+html.dark {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+}
+
+body {
+    color: var(--foreground);
+    background: var(--background);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* In your CSS file */
+@layer components {
+    .focus-visible\:border-gray-300:focus-visible {
+        @apply border-gray-300;
+    }
+
+    .focus-visible\:ring-0:focus-visible {
+        @apply ring-0;
+    }
+}
