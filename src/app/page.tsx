@@ -2,6 +2,9 @@
 import { useEffect, useState } from "react";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import HighQualityIcon from '@mui/icons-material/HighQuality';
+import BoltIcon from '@mui/icons-material/Bolt';
+import ShieldIcon from '@mui/icons-material/Shield';
 
 export default function Home() {
     const [darkMode, setDarkMode] = useState(false);
@@ -106,16 +109,25 @@ export default function Home() {
                     </div>
 
                     <div className="grid grid-cols-1 gap-8 mt-12 text-left sm:grid-cols-3">
-                        <div className="p-6 transition-shadow bg-white shadow-sm dark:bg-gray-800 rounded-xl hover:shadow-md">
-                            <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">High Quality</h3>
+                        <div className="p-6 hover:scale-[1.02] transition-all bg-white shadow-sm dark:bg-gray-800 rounded-xl hover:shadow-md">
+                            <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
+                                High Quality
+                                <HighQualityIcon className="w-6 h-6 ml-2 text-gray-400" />
+                            </h3>
                             <p className="text-gray-600 dark:text-gray-400">Download videos in up to 4K resolution</p>
                         </div>
-                        <div className="p-6 transition-shadow bg-white shadow-sm dark:bg-gray-800 rounded-xl hover:shadow-md">
-                            <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Fast Processing</h3>
+                        <div className="p-6 bg-white hover:scale-[1.02] transition-all shadow-sm dark:bg-gray-800 rounded-xl hover:shadow-md">
+                            <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
+                                Fast Processing
+                                <BoltIcon className="w-6 h-6 ml-2 text-gray-400" />
+                            </h3>
                             <p className="text-gray-600 dark:text-gray-400">Instant conversion with no delays</p>
                         </div>
-                        <div className="p-6 transition-shadow bg-white shadow-sm dark:bg-gray-800 rounded-xl hover:shadow-md">
-                            <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Secure</h3>
+                        <div className="p-6 hover:scale-[1.02] transition-all bg-white shadow-sm dark:bg-gray-800 rounded-xl hover:shadow-md">
+                            <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
+                                Secure
+                                <ShieldIcon className="w-6 h-6 ml-2 text-gray-400" />
+                            </h3>
                             <p className="text-gray-600 dark:text-gray-400">No data storage or tracking</p>
                         </div>
                     </div>
