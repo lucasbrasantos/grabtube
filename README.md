@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# GrabTube - YouTube Video Downloader
 
-First, run the development server:
+[![Next.js](https://img.shields.io/badge/Next.js-15.1.7-blue.svg)](https://nextjs.org/) [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.1-blue.svg)](https://tailwindcss.com/) [![React](https://img.shields.io/badge/React-19.0.0-blue.svg)](https://reactjs.org/) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE) [![Deploy on Vercel](https://vercel.com/button)](https://vercel.com/new?utm_source=grabtube&utm_campaign=oss)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+GrabTube is a modern, fast, and secure YouTube video downloader built with [Next.js](https://nextjs.org), [React](https://reactjs.org), and [Tailwind CSS](https://tailwindcss.com). It lets users preview videos before download, provides a progress bar during download, and supports high-quality video downloads—all with a sleek and responsive UI.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+![GrabTube Screenshot](/public/grabtube.png)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ✨ Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- 🎬 **Instant Video Preview** – See a mini-preview of the video as soon as you paste its URL.
+- 🚀 **High-Speed Downloads** – Download videos in up to 4K quality.
+- 🔒 **Secure Processing** – No data storage or tracking.
+- 🌓 **Dark/Light Mode** – Seamless theme toggle.
+- 📊 **Real-time Progress** – Visual feedback via a progress bar.
+- 📱 **Responsive Design** – Fully optimized for all devices.
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js 15.1.7, React 19.0.0, Tailwind CSS 3.4.1
+- **Backend:** Next.js API Routes
+- **Utilities:** youtube-dl-exec, react-youtube, react-hot-toast
+- **UI Components:** Material UI Icons
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+  
+- npm 9+ or yarn 1.22+  
+
+### Installation
+
+1. **Clone the repository and install dependencies:**
+
+   ```bash
+   git clone https://github.com/yourusername/grabtube.git
+   cd grabtube
+   npm install
+   # or
+   yarn install
+   ```
+
+2. **Run the development server:**
+
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   ```
+
+3. **Open in your browser:**
+
+   [http://localhost:3000](http://localhost:3000)
+
+## Usage
+
+1. **Paste a URL:**  
+   Enter a YouTube video URL into the input field.
+2. **Preview the Video:**  
+   A mini-preview player (integrated below the input) loads to let you confirm the video.
+3. **Download:**  
+   Click the **Download Now** button to start the download process.
+4. **Progress Feedback:**  
+   A progress bar displays the current download status in real time.
+
+## Video Preview Feature
+
+GrabTube features a built-in mini-player that loads the video preview as soon as you paste the URL. This ensures you’re downloading the correct content before proceeding. The preview is displayed between the input field and the feature cards.
+
+*Tip:* Future improvements may include additional metadata or thumbnail overlays in the mini-player.
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+- [Next.js Documentation](https://nextjs.org/docs) – Explore Next.js features and API routes.
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs) – Learn about Tailwind’s utility-first approach.
+- [youtube-dl-exec on NPM](https://www.npmjs.com/package/youtube-dl-exec) – Documentation for video downloading utilities.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Visit the [GrabTube GitHub Repository](https://github.com/yourusername/grabtube) for more details, issues, and contributions.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🌍 Deploy
 
-## Deploy on Vercel
+GrabTube is optimized for deployment on [Vercel](https://vercel.com/new?utm_source=grabtube&utm_campaign=oss). Deploy your instance effortlessly and enjoy automatic scaling and performance optimizations.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📜 License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+
+---
+
+Made by [Lucas Braga Santos](https://github.com/lucasbrasantos)
