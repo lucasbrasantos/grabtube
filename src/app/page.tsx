@@ -1,42 +1,84 @@
 "use client";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import HighQualityIcon from '@mui/icons-material/HighQuality';
 import BoltIcon from '@mui/icons-material/Bolt';
 import ShieldIcon from '@mui/icons-material/Shield';
 import Image from "next/image";
+import LinearProgress from '@mui/material/LinearProgress';
 
 export default function Home() {
     const [darkMode, setDarkMode] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
+    const [videoUrl, setVideoUrl] = useState<string>('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [downloadProgress, setDownloadProgress] = useState(0);
 
     useEffect(() => {
         setIsMounted(true);
-        if (
-            localStorage.theme === "dark" ||
-            (!("theme" in localStorage) &&
-                window.matchMedia("(prefers-color-scheme: dark)").matches)
-        ) {
+        const savedTheme = localStorage.getItem("theme");
+        const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+        if (savedTheme === "dark" || (!savedTheme && systemDark)) {
             setDarkMode(true);
             document.documentElement.classList.add("dark");
-        } else {
-            setDarkMode(false);
-            document.documentElement.classList.remove("dark");
         }
     }, []);
 
     const toggleDarkMode = () => {
-        document.documentElement.classList.add("transition-colors");
-        document.documentElement.classList.add("duration-300");
-        if (darkMode) {
-            document.documentElement.classList.remove("dark");
-            localStorage.theme = "light";
-        } else {
-            document.documentElement.classList.add("dark");
-            localStorage.theme = "dark";
+        document.documentElement.classList.add("transition-colors", "duration-300");
+        const newDarkMode = !darkMode;
+        setDarkMode(newDarkMode);
+        localStorage.theme = newDarkMode ? "dark" : "light";
+        document.documentElement.classList.toggle("dark", newDarkMode);
+    };
+
+    const handleDownload = async () => {
+        try {
+            if (!videoUrl) return alert('Please enter a YouTube URL');
+            setIsLoading(true);
+            setDownloadProgress(0);
+
+            const response = await fetch('/api/download', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: videoUrl }),
+            });
+
+            if (!response.ok) throw new Error(await response.text());
+
+            const reader = response.body?.getReader();
+            const contentLength = +(response.headers.get('Content-Length') || 0);
+            let receivedLength = 0;
+            const chunks = [];
+
+            while (true) {
+                const { done, value } = await reader!.read();
+                if (done) break;
+
+                chunks.push(value);
+                receivedLength += value.length;
+                setDownloadProgress(contentLength ? Math.round((receivedLength / contentLength) * 100) : 0);
+            }
+
+            const blob = new Blob(chunks);
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = downloadUrl;
+            link.setAttribute('download', `GrabTube_${Date.now()}.mp4`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(downloadUrl);
+
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Download failed');
+        } finally {
+            setIsLoading(false);
+            setVideoUrl('');
+            setDownloadProgress(0);
         }
-        setDarkMode(!darkMode);
     };
 
     if (!isMounted) return null;
@@ -105,9 +147,30 @@ export default function Home() {
                     <h1 className="mb-6 text-4xl font-bold text-gray-900 sm:text-5xl dark:text-white">
                         Download <span className="text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text">YouTube Videos</span> Instantly
                     </h1>
-                    <p className="mb-12 text-lg text-gray-600 dark:text-gray-300">
+                    <p className="mb-6 text-lg text-gray-600 dark:text-gray-300">
                         Fast, secure, and free YouTube video downloader
                     </p>
+
+                    {/* Progress Bar */}
+                    {isLoading && (
+                        <div className="w-full px-4 mx-auto max-w-7xl sm:px-6 lg:px-8 mb-6">
+                            <LinearProgress
+                                variant={downloadProgress > 0 ? "determinate" : "indeterminate"}
+                                value={downloadProgress}
+                                sx={{
+                                    height: 8,
+                                    borderRadius: 4,
+                                    '& .MuiLinearProgress-bar': {
+                                        background: 'linear-gradient(90deg, #4f46e5 0%, #9333ea 100%)',
+                                        borderRadius: 4
+                                    }
+                                }}
+                            />
+                            <div className="mt-2 text-sm text-right text-gray-600 dark:text-gray-400">
+                                {downloadProgress > 0 ? `${downloadProgress}%` : 'Starting download...'}
+                            </div>
+                        </div>
+                    )}
 
 
                     <div className="relative group">
@@ -118,10 +181,22 @@ export default function Home() {
                                     type="text"
                                     placeholder="Paste YouTube URL here"
                                     required
-                                    className="outline-none w-full px-6 py-4 text-gray-900 placeholder-gray-400 bg-transparent border-0 focus:ring-0 dark:text-white"
+                                    value={videoUrl}
+                                    disabled={isLoading}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                            handleDownload();
+                                        }
+                                    }}
+                                    onChange={(e) => setVideoUrl(e.target.value)}
+                                    className={`outline-none w-full px-6 py-4 text-gray-900 placeholder-gray-400 bg-transparent border-0 focus:ring-0 dark:text-white ${isLoading && 'opacity-50 cursor-not-allowed'}`}
                                 />
-                                <button className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg transition-all transform hover:scale-[1.02] active:scale-95">
-                                    Download Now
+                                <button
+                                    onClick={handleDownload}
+                                    disabled={isLoading}
+                                    className={`w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-lg transition-all transform hover:scale-[1.02] active:scale-95 ${isLoading && 'opacity-50 cursor-not-allowed'}`}
+                                >
+                                    {isLoading ? 'Downloading...' : 'Download Now'}
                                 </button>
                             </div>
                         </div>
