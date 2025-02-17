@@ -51,7 +51,7 @@ export default function Home() {
             const reader = response.body?.getReader();
             const contentLength = +(response.headers.get('Content-Length') || 0);
             let receivedLength = 0;
-            const chunks = [];
+            const chunks: Uint8Array[] = [];
 
             while (true) {
                 const { done, value } = await reader!.read();
