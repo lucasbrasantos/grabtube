@@ -1,12 +1,16 @@
 "use client";
-import { ChangeEvent, useEffect, useState } from "react";
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import HighQualityIcon from '@mui/icons-material/HighQuality';
 import BoltIcon from '@mui/icons-material/Bolt';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import HighQualityIcon from '@mui/icons-material/HighQuality';
+import LightModeIcon from '@mui/icons-material/LightMode';
 import ShieldIcon from '@mui/icons-material/Shield';
-import Image from "next/image";
 import LinearProgress from '@mui/material/LinearProgress';
+import Image from "next/image";
+import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
+import YouTube from "react-youtube";
 
 export default function Home() {
     const [darkMode, setDarkMode] = useState(false);
@@ -14,6 +18,9 @@ export default function Home() {
     const [videoUrl, setVideoUrl] = useState<string>('');
     const [isLoading, setIsLoading] = useState(false);
     const [downloadProgress, setDownloadProgress] = useState(0);
+    const [videoId, setVideoId] = useState<string | null>(null);
+    const [validationError, setValidationError] = useState<string | null>(null);
+
 
     useEffect(() => {
         setIsMounted(true);
@@ -26,6 +33,46 @@ export default function Home() {
         }
     }, []);
 
+
+    useEffect(() => {
+        const extractVideoId = (url: string) => {
+            const regExp = /^.*(?:(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=))([^#\&\?]{11}).*/;
+            const match = url.match(regExp);
+            return match ? match[1] : null;
+        };
+
+        if (videoUrl) {
+            try {
+                new URL(videoUrl); // Basic URL validation
+                const id = extractVideoId(videoUrl);
+
+                if (!id) {
+                    throw new Error('Invalid YouTube URL format');
+                }
+
+                setVideoId(id);
+                setValidationError(null);
+            } catch (error) {
+                setVideoId(null);
+                setValidationError('Please enter a valid YouTube URL');
+            }
+        } else {
+            setVideoId(null);
+            setValidationError(null);
+        }
+    }, [videoUrl]);
+
+    const previewOptions = {
+        height: '200',
+        width: '100%',
+        playerVars: {
+            autoplay: 0,
+            controls: 1,
+            modestbranding: 1,
+            rel: 0
+        }
+    };
+
     const toggleDarkMode = () => {
         document.documentElement.classList.add("transition-colors", "duration-300");
         const newDarkMode = !darkMode;
@@ -36,9 +83,37 @@ export default function Home() {
 
     const handleDownload = async () => {
         try {
-            if (!videoUrl) return alert('Please enter a YouTube URL');
+            if (!videoUrl) {
+                toast.error('Please enter a YouTube URL', {
+                    icon: <ErrorOutlineIcon className="text-red-500" />,
+                    style: {
+                        background: darkMode ? '#1f2937' : '#fff',
+                        color: darkMode ? '#fff' : '#374151',
+                    }
+                });
+                return;
+            }
+            if (!videoId) {
+                toast.error('Invalid YouTube URL', {
+                    icon: <ErrorOutlineIcon className="text-red-500" />,
+                    style: {
+                        background: darkMode ? '#1f2937' : '#fff',
+                        color: darkMode ? '#fff' : '#374151',
+                    }
+                });
+                return;
+            }
+
             setIsLoading(true);
             setDownloadProgress(0);
+
+            toast.success('Download started!', {
+                icon: <CheckCircleOutlineIcon className="text-green-500" />,
+                style: {
+                    background: darkMode ? '#1f2937' : '#fff',
+                    color: darkMode ? '#fff' : '#374151',
+                }
+            });
 
             const response = await fetch('/api/download', {
                 method: 'POST',
@@ -47,6 +122,7 @@ export default function Home() {
             });
 
             if (!response.ok) throw new Error(await response.text());
+
 
             const reader = response.body?.getReader();
             const contentLength = +(response.headers.get('Content-Length') || 0);
@@ -72,8 +148,23 @@ export default function Home() {
             link.remove();
             window.URL.revokeObjectURL(downloadUrl);
 
+            toast.success('Download completed!', {
+                icon: <CheckCircleOutlineIcon className="text-green-500" />,
+                style: {
+                    background: darkMode ? '#1f2937' : '#fff',
+                    color: darkMode ? '#fff' : '#374151',
+                }
+            });
+
         } catch (error) {
-            alert(error instanceof Error ? error.message : 'Download failed');
+            const errorMessage = error instanceof Error ? error.message : 'Download failed';
+            toast.error(errorMessage, {
+                icon: <ErrorOutlineIcon className="text-red-500" />,
+                style: {
+                    background: darkMode ? '#1f2937' : '#fff',
+                    color: darkMode ? '#fff' : '#374151',
+                }
+            });
         } finally {
             setIsLoading(false);
             setVideoUrl('');
@@ -85,6 +176,13 @@ export default function Home() {
 
     return (
         <main className="min-h-screen transition-colors duration-300 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900/20">
+            <Toaster
+                position="top-center"
+                toastOptions={{
+                    duration: 5500,
+                    className: '!rounded-xl !shadow-lg',
+                }}
+            />
             {/* Navbar */}
             <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md dark:border-gray-800">
                 <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -169,6 +267,11 @@ export default function Home() {
                             <div className="mt-2 text-sm text-right text-gray-600 dark:text-gray-400">
                                 {downloadProgress > 0 ? `${downloadProgress}%` : 'Starting download...'}
                             </div>
+                            {validationError && (
+                                <p className="mt-2 text-sm text-red-500 dark:text-red-400 text-left">
+                                    {validationError}
+                                </p>
+                            )}
                         </div>
                     )}
 
@@ -201,6 +304,23 @@ export default function Home() {
                             </div>
                         </div>
                     </div>
+
+                    {/* Add video preview here */}
+                    {videoId && (
+                        <div className="mt-8 rounded-xl overflow-hidden shadow-lg">
+                            <YouTube
+                                videoId={videoId}
+                                opts={previewOptions}
+                                className="youtube-preview"
+                                iframeClassName="w-full"
+                            />
+                            <div className="p-4 bg-white dark:bg-gray-800">
+                                <p className="text-gray-600 dark:text-gray-300 text-sm">
+                                    Preview of the video to be downloaded
+                                </p>
+                            </div>
+                        </div>
+                    )}
 
 
                     {/* Cards */}
