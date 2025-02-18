@@ -25,34 +25,39 @@ GrabTube is a modern, fast, and secure YouTube video downloader built with [Next
 
 ## 🚀 Getting Started
 
+## 🚨 Important Requirement
+**Python 3.7+ must be installed on your system** for the youtube-dl-exec package to work properly. The library will throw an error if Python is not available as `python3` in your PATH.
+
+```bash
+# Verify Python installation
+python3 --version
+```
+
 ### Prerequisites
 
 - Node.js 18+  
+- Python 3.7+ (system-wide installation)
 - npm 9+ or yarn 1.22+  
 
 ### Installation
 
-1. **Clone the repository and install dependencies:**
+```bash
+# 1. Clone repository
+git clone https://github.com/lucasbrasantos/grabtube.git
+cd grabtube
 
-   ```bash
-   git clone https://github.com/yourusername/grabtube.git
-   cd grabtube
-   npm install
-   # or
-   yarn install
-   ```
+# 2. Install dependencies (requires Python 3.7+)
+npm install
 
-2. **Run the development server:**
+# 3. Start development server
+npm run dev
+```
 
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
+**Important:** If you encounter installation errors:
+1. Verify Python 3.7+ is installed
+2. Ensure Python is in your system PATH
+3. For deployment, see [Troubleshooting](#-troubleshooting)
 
-3. **Open in your browser:**
-
-   [http://localhost:3000](http://localhost:3000)
 
 ## Usage
 
@@ -82,6 +87,25 @@ Visit the [GrabTube GitHub Repository](https://github.com/yourusername/grabtube)
 ## 🌍 Deploy
 
 GrabTube is optimized for deployment on [Vercel](https://vercel.com/new?utm_source=grabtube&utm_campaign=oss). Deploy your instance effortlessly and enjoy automatic scaling and performance optimizations.
+
+## 🚑 Troubleshooting
+
+### Common Errors
+**Error: "Python executable not found"**
+```bash
+# Linux/macOS
+sudo apt-get install python3
+
+# Windows (via Microsoft Store)
+Install Python 3.11+ from python.org
+```
+
+**Error during deployment**  
+Add these build commands in Vercel:
+```bash
+Install Python 3.x
+pip install yt-dlp
+```
 
 ## 📜 License
 
