@@ -20,23 +20,14 @@ GrabTube is a modern, fast, and secure YouTube video downloader built with [Next
 
 - **Frontend:** Next.js 15.1.7, React 19.0.0, Tailwind CSS 3.4.1
 - **Backend:** Next.js API Routes
-- **Utilities:** youtube-dl-exec, react-youtube, react-hot-toast
+- **Utilities:** ytdl-core (distube/ytdl-core), react-youtube, react-hot-toast
 - **UI Components:** Material UI Icons
 
 ## 🚀 Getting Started
 
-## 🚨 Important Requirement
-**Python 3.7+ must be installed on your system** for the youtube-dl-exec package to work properly. The library will throw an error if Python is not available as `python3` in your PATH.
-
-```bash
-# Verify Python installation
-python3 --version
-```
-
 ### Prerequisites
 
 - Node.js 18+  
-- Python 3.7+ (system-wide installation)
 - npm 9+ or yarn 1.22+  
 
 ### Installation
@@ -46,18 +37,12 @@ python3 --version
 git clone https://github.com/lucasbrasantos/grabtube.git
 cd grabtube
 
-# 2. Install dependencies (requires Python 3.7+)
+# 2. Install dependencies
 npm install
 
 # 3. Start development server
 npm run dev
 ```
-
-**Important:** If you encounter installation errors:
-1. Verify Python 3.7+ is installed
-2. Ensure Python is in your system PATH
-3. For deployment, see [Troubleshooting](#-troubleshooting)
-
 
 ## Usage
 
@@ -80,9 +65,9 @@ GrabTube features a built-in mini-player that loads the video preview as soon as
 
 - [Next.js Documentation](https://nextjs.org/docs) – Explore Next.js features and API routes.
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs) – Learn about Tailwind’s utility-first approach.
-- [youtube-dl-exec on NPM](https://www.npmjs.com/package/youtube-dl-exec) – Documentation for video downloading utilities.
+- [ytdl-core Documentation](https://github.com/distubejs/ytdl-core) – Core YouTube download functionality
 
-Visit the [GrabTube GitHub Repository](https://github.com/yourusername/grabtube) for more details, issues, and contributions.
+Visit the [GrabTube GitHub Repository](https://github.com/lucasbrasantos/grabtube) for more details, issues, and contributions.
 
 ## 🌍 Deploy
 
@@ -91,21 +76,10 @@ GrabTube is optimized for deployment on [Vercel](https://vercel.com/new?utm_sour
 ## 🚑 Troubleshooting
 
 ### Common Errors
-**Error: "Python executable not found"**
-```bash
-# Linux/macOS
-sudo apt-get install python3
-
-# Windows (via Microsoft Store)
-Install Python 3.11+ from python.org
-```
-
-**Error during deployment**  
-Add these build commands in Vercel:
-```bash
-Install Python 3.x
-pip install yt-dlp
-```
+If you encounter any issues with video downloads:
+1. Ensure you're using valid YouTube URLs
+2. Check your internet connection
+3. Verify the video is not age-restricted or private
 
 ## 📜 License
 
