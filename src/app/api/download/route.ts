@@ -1,58 +1,37 @@
-import youtubedl from 'youtube-dl-exec';
 import { NextResponse } from 'next/server';
+import { VideoService } from './service';
+import { rateLimiter, validateRequest } from '@/lib/utils/stream';
 
-export async function POST(request) {
-    try {
-        const { url } = await request.json();
-        if (!url) {
-            return NextResponse.json({ error: 'No URL provided' }, { status: 400 });
-        }
 
-        // Get video info first to get proper filename
-        const info = await youtubedl(url, {
-            dumpSingleJson: true,
-            noCheckCertificates: true,
-            noWarnings: true,
-            preferFreeFormats: true,
-        });
+export const POST = async (req: Request) => {
+	try {
+		// Rate limiting
+		const identifier = req.headers.get('x-real-ip') || 'anonymous';
+		const { success } = await rateLimiter.limit(identifier);
 
-        if (!info) {
-            return NextResponse.json({ error: 'Invalid URL or video unavailable' }, { status: 400 });
-        }
 
-        // Create a readable stream from youtube-dl
-        const ytdlStream = youtubedl.exec(url, {
-            output: '-', // Output to stdout
-            format: 'best',
-            noCheckCertificates: true,
-            noWarnings: true,
-        }).stdout;
+		if (!success) {
+			return new NextResponse('Too many requests', { status: 429 });
+		}
 
-        // Create response stream
-        const responseStream = new ReadableStream({
-            start(controller) {
-                ytdlStream?.on('data', (chunk) => controller.enqueue(chunk));
-                ytdlStream?.on('end', () => controller.close());
-                ytdlStream?.on('error', (error) => controller.error(error));
-            },
-        });
+		// Validation
+		const { url, quality } = await validateRequest(req);
 
-        // Get safe filename
-        const filename = `video_${Date.now()}_grabtube.mp4`;
+		// Get video stream
+		const { stream, info } = await VideoService.getVideoStream(url, quality);
 
-        return new Response(responseStream, {
-            headers: {
-                'Content-Type': 'video/mp4',
-                'Content-Disposition': `attachment; filename="${filename}"`,
-                'Access-Control-Allow-Origin': '*',
-            },
-        });
-
-    } catch (error) {
-        console.error('Download error:', error);
-        return NextResponse.json(
-            { error: error || 'Failed to download video' },
-            { status: 500 }
-        );
-    }
-}
+		// Create response stream
+		return new Response(stream as any, {
+			headers: {
+				'Content-Type': 'video/mp4',
+				'Content-Disposition': `attachment; filename="${VideoService.sanitizeFilename(info.title)}.mp4"`,
+				'Cache-Control': 'no-store, max-age=0',
+			},
+		});
+	} catch (error) {
+		return NextResponse.json(
+			{ error: error instanceof Error ? error.message : 'Download failed' },
+			{ status: error instanceof Error ? 400 : 500 }
+		);
+	}
+};

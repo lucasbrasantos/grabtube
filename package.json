@@ -9,16 +9,22 @@
         "lint": "next lint"
     },
     "dependencies": {
+        "@distube/ytdl-core": "^4.16.4",
         "@emotion/react": "^11.14.0",
         "@emotion/styled": "^11.14.0",
         "@mui/icons-material": "^6.4.4",
         "@mui/material": "^6.4.4",
+        "@upstash/ratelimit": "^2.0.5",
+        "@upstash/redis": "^1.34.4",
+        "dotenv": "^16.4.7",
         "next": "15.1.7",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
         "react-hot-toast": "^2.5.2",
         "react-youtube": "^10.1.0",
-        "youtube-dl-exec": "^3.0.15"
+        "youtube-dl-exec": "^3.0.15",
+        "ytdl-core": "npm:@distube/ytdl-core@^4.16.4",
+        "zod": "^3.24.2"
     },
     "devDependencies": {
         "@eslint/eslintrc": "^3",
