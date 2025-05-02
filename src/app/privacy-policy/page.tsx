@@ -5,7 +5,8 @@ import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import Link from 'next/link';
 import Image from "next/image";
-import { Footer, Navbar } from "../page";
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 
 export default function PrivacyPolicy() {
     const [darkMode, setDarkMode] = useState(false);

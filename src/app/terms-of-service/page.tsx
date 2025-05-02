@@ -1,11 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import Link from 'next/link';
-import Image from "next/image";
-import { Footer, Navbar } from "../page";
+import { useEffect, useState } from "react";
 
 export default function TermsOfService() {
     const [darkMode, setDarkMode] = useState(false);

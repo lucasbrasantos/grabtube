@@ -4,7 +4,8 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import IssueIcon from '@mui/icons-material/BugReport';
 import Link from 'next/link';
 import { useEffect, useState } from "react";
-import { Footer, Navbar } from "../page";
+import Footer from '@/components/Footer';
+import Navbar from '@/components/Navbar';
 
 export default function ContactPage() {
     const [darkMode, setDarkMode] = useState(false);
