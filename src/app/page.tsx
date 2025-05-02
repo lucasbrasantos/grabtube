@@ -187,69 +187,12 @@ export default function Home() {
 					className: '!rounded-xl !shadow-lg',
 				}}
 			/>
-			{/* Navbar */}
-			<nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md dark:border-gray-800">
-				<div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
-					<div className="flex items-center h-16 justify-evenly">
-						<div className="absolute hidden left-4 sm:block">
-							{darkMode ? (
-								<Link href="/">
-									<Image
-										src="/logo-dark.png"
-										alt="GrabTube Logo"
-										width={350}
-										height={196}
-										className="h-12 w-auto"
-									/>
-								</Link>
 
-							) : (
-								<Link href="/">
-									<Image
-										src="/logo-light.png"
-										alt="GrabTube Logo"
-										width={350}
-										height={196}
-										className="h-12 w-auto"
-									/>
-								</Link>
-							)
+			<Navbar
+				darkMode={darkMode}
+				toggleDarkMode={toggleDarkMode}
+			/>
 
-							}
-						</div>
-						<div className="flex items-center justify-center flex-shrink-0 space-x-2">
-							<Link href="/">
-								<Image
-									src="/logo-symbol.png"
-									alt="GrabTube Logo"
-									width={140}
-									height={124}
-									className="h-6 w-auto mr-4 sm:hidden"
-
-								/>
-							</Link>
-							<span className="text-2xl font-bold text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text">
-								GrabTube
-							</span>
-							<span className="hidden text-sm font-medium text-gray-500 sm:block dark:text-gray-400">
-								YouTube Video Downloader
-							</span>
-						</div>
-
-
-						<button
-							onClick={toggleDarkMode}
-							className="p-2 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
-						>
-							{darkMode ? (
-								<LightModeIcon className="w-6 h-6 text-gray-400" />
-							) : (
-								<DarkModeIcon className="w-6 h-6 text-gray-400" />
-							)}
-						</button>
-					</div>
-				</div>
-			</nav>
 
 			{/* Main Content */}
 			<div className="px-4 py-16 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -384,6 +327,99 @@ export default function Home() {
 				</div>
 			</div>
 
+
+			<Footer
+
+			/>
+
+		</main>
+	);
+}
+
+
+
+interface NavbarProps {
+	darkMode: boolean;
+	toggleDarkMode: () => void;
+}
+
+
+export function Navbar({ darkMode,
+	toggleDarkMode }: NavbarProps) {
+	return (
+		<>
+			{/* Navbar */}
+			<nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md dark:border-gray-800">
+				<div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+					<div className="flex items-center h-16 justify-evenly">
+						<div className="absolute hidden left-4 sm:block">
+							{darkMode ? (
+								<Link href="/">
+									<Image
+										src="/logo-dark.png"
+										alt="GrabTube Logo"
+										width={350}
+										height={196}
+										className="h-12 w-auto"
+									/>
+								</Link>
+
+							) : (
+								<Link href="/">
+									<Image
+										src="/logo-light.png"
+										alt="GrabTube Logo"
+										width={350}
+										height={196}
+										className="h-12 w-auto"
+									/>
+								</Link>
+							)
+
+							}
+						</div>
+						<div className="flex items-center justify-center flex-shrink-0 space-x-2">
+							<Link href="/">
+								<Image
+									src="/logo-symbol.png"
+									alt="GrabTube Logo"
+									width={140}
+									height={124}
+									className="h-6 w-auto mr-4 sm:hidden"
+
+								/>
+							</Link>
+							<span className="text-2xl font-bold text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text">
+								GrabTube
+							</span>
+							<span className="hidden text-sm font-medium text-gray-500 sm:block dark:text-gray-400">
+								YouTube Video Downloader
+							</span>
+						</div>
+
+
+						<button
+							onClick={toggleDarkMode}
+							className="p-2 transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+						>
+							{darkMode ? (
+								<LightModeIcon className="w-6 h-6 text-gray-400" />
+							) : (
+								<DarkModeIcon className="w-6 h-6 text-gray-400" />
+							)}
+						</button>
+					</div>
+				</div>
+			</nav>
+		</>
+	);
+}
+
+
+
+export function Footer() {
+	return (
+		<>
 			{/* Footer */}
 			<footer className="mt-24 border-t border-gray-200 dark:border-gray-800">
 				<div className="px-4 py-8 mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -405,9 +441,9 @@ export default function Home() {
 									&copy; {new Date().getFullYear()} GrabTube. All rights reserved.
 								</p>
 								<div className="flex justify-center mt-2 space-x-4">
-									<a href="#" className="transition-colors hover:text-gray-900 dark:hover:text-white">Privacy Policy</a>
-									<a href="#" className="transition-colors hover:text-gray-900 dark:hover:text-white">Terms of Service</a>
-									<a href="#" className="transition-colors hover:text-gray-900 dark:hover:text-white">Contact</a>
+									<a href="/privacy-policy" className="transition-colors hover:text-gray-900 dark:hover:text-white">Privacy Policy</a>
+									<a href="/terms-of-service" className="transition-colors hover:text-gray-900 dark:hover:text-white">Terms of Service</a>
+									<a href="/contact" className="transition-colors hover:text-gray-900 dark:hover:text-white">Contact</a>
 								</div>
 								<p className="mt-4 text-sm">
 									Made by{" "}
@@ -425,6 +461,6 @@ export default function Home() {
 					</div>
 				</div>
 			</footer>
-		</main>
+		</>
 	);
 }

@@ -1,18 +1,18 @@
 import { NextResponse } from 'next/server';
 import { VideoService } from './service';
-import { rateLimiter, validateRequest } from '@/lib/utils/stream';
+import { validateRequest } from '@/lib/utils/stream';
 
 
 export const POST = async (req: Request) => {
 	try {
 		// Rate limiting
-		const identifier = req.headers.get('x-real-ip') || 'anonymous';
-		const { success } = await rateLimiter.limit(identifier);
+		// const identifier = req.headers.get('x-real-ip') || 'anonymous';
+		// const { success } = await rateLimiter.limit(identifier);
 
 
-		if (!success) {
-			return new NextResponse('Too many requests', { status: 429 });
-		}
+		// if (!success) {
+		// 	return new NextResponse('Too many requests', { status: 429 });
+		// }
 
 		// Validation
 		const { url, quality } = await validateRequest(req);
