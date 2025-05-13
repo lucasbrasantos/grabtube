@@ -139,7 +139,7 @@ export default function Home() {
 				setDownloadProgress(contentLength ? Math.round((receivedLength / contentLength) * 100) : 0);
 			}
 
-			const blob = new Blob(chunks);
+			const blob = new Blob(chunks as BlobPart[], { type: 'video/mp4' });
 			const downloadUrl = window.URL.createObjectURL(blob);
 			const link = document.createElement('a');
 			link.href = downloadUrl;
@@ -171,9 +171,8 @@ export default function Home() {
 			setVideoUrl('');
 			setDownloadProgress(0);
 		}
-	};
 
-	if (!isMounted) return null;
+	}; if (!isMounted) return null;
 
 	return (
 		<main className="min-h-screen transition-colors duration-300 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900/20">

@@ -9,7 +9,7 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
-		"@distube/ytdl-core": "^4.16.4",
+		"@distube/ytdl-core": "^4.16.10",
 		"@emotion/react": "^11.14.0",
 		"@emotion/styled": "^11.14.0",
 		"@mui/icons-material": "^6.4.4",
