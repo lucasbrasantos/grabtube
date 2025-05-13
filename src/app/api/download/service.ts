@@ -1,7 +1,7 @@
 // app/api/video/service.ts
 import { PassThrough } from 'stream';
 // import { redis } from '@/lib/utils/stream';
-import ytdl from "@distube/ytdl-core"
+import ytdl, { Cookie } from "@distube/ytdl-core"
 import { VideoInfo, VideoResponse } from '@/lib/types/video';
 
 export class VideoService {
@@ -9,15 +9,7 @@ export class VideoService {
 
 		if (!ytdl.validateURL(url)) throw new Error('Invalid YouTube URL');
 
-		// Get cached metadata if exists
-		// const cached = await redis.get<string>(`video:${url}`);
-		// let cachedInfo: VideoInfo | null = null;
 
-		// if (cached) {
-		// 	cachedInfo = typeof cached === 'string' ? JSON.parse(cached) as VideoInfo : cached;
-		// }
-
-		// Always get full video info for downloading
 		const fullInfo = await ytdl.getInfo(url);
 
 		// Create fresh stream using full info
@@ -26,18 +18,8 @@ export class VideoService {
 			dlChunkSize: 0,
 		}).pipe(new PassThrough());
 
-		const stream2 = ytdl(url, {
-			quality,
-			dlChunkSize: 0,
-		}).pipe(new PassThrough());
-
-		// Cache metadata if not already cached
-		// if (!cached) {
-		// 	await this.cacheVideoInfo(url, fullInfo);
-		// }
-
 		return {
-			stream: stream2,
+			stream: stream,
 			info: /* cachedInfo  ||*/ {
 				title: fullInfo.videoDetails.title,
 				duration: fullInfo.videoDetails.lengthSeconds,
@@ -46,13 +28,14 @@ export class VideoService {
 		};
 	}
 
-	// private static async cacheVideoInfo(url: string, info: ytdl.videoInfo) {
-	// 	await redis.setex(`video:${url}`, 600, JSON.stringify({
-	// 		title: info.videoDetails.title,
-	// 		duration: info.videoDetails.lengthSeconds,
-	// 		thumbnail: info.videoDetails.thumbnails[0]?.url || ''
-	// 	}));
-	// }
+	public static getRandomUserAgent() {
+		const userAgents = [
+			'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+			'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.1 Safari/605.1.15',
+			'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0'
+		];
+		return userAgents[Math.floor(Math.random() * userAgents.length)];
+	}
 
 	static sanitizeFilename(title: string) {
 		return title.replace(/[^a-z0-9]/gi, '_').slice(0, 100);
