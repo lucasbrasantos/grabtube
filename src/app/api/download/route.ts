@@ -29,6 +29,7 @@ export const POST = async (req: Request) => {
 			},
 		});
 	} catch (error) {
+		console.error("ERROR -> ", error);
 		return NextResponse.json(
 			{ error: error instanceof Error ? error.message : 'Download failed' },
 			{ status: error instanceof Error ? 400 : 500 }

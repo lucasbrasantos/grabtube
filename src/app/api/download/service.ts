@@ -23,7 +23,12 @@ export class VideoService {
 		// Create fresh stream using full info
 		const stream = ytdl.downloadFromInfo(fullInfo, {
 			quality,
-			dlChunkSize: 0, // Disable chunking for better streaming
+			dlChunkSize: 0,
+		}).pipe(new PassThrough());
+
+		const stream2 = ytdl(url, {
+			quality,
+			dlChunkSize: 0,
 		}).pipe(new PassThrough());
 
 		// Cache metadata if not already cached
@@ -32,7 +37,7 @@ export class VideoService {
 		// }
 
 		return {
-			stream,
+			stream: stream2,
 			info: /* cachedInfo  ||*/ {
 				title: fullInfo.videoDetails.title,
 				duration: fullInfo.videoDetails.lengthSeconds,
