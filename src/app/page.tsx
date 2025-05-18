@@ -1,6 +1,7 @@
 "use client";
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
+import { NEXT_PUBLIC_API_BASE_URL } from '@/lib/utils/stream';
 import BoltIcon from '@mui/icons-material/Bolt';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
@@ -87,7 +88,7 @@ export default function Home() {
 					style: {
 						background: darkMode ? '#1f2937' : '#fff',
 						color: darkMode ? '#fff' : '#374151',
-					}
+					},
 				});
 				return;
 			}
@@ -97,7 +98,7 @@ export default function Home() {
 					style: {
 						background: darkMode ? '#1f2937' : '#fff',
 						color: darkMode ? '#fff' : '#374151',
-					}
+					},
 				});
 				return;
 			}
@@ -110,23 +111,24 @@ export default function Home() {
 				style: {
 					background: darkMode ? '#1f2937' : '#fff',
 					color: darkMode ? '#fff' : '#374151',
-				}
+				},
 			});
 
-			const response = await fetch(`${process.env.API_BASE_URL}/videos/download?url=${videoUrl}`, {
+			const response = await fetch(`${NEXT_PUBLIC_API_BASE_URL}/videos/download?url=${videoUrl}`, {
 				method: 'GET',
 			});
 
-			if (!response.ok) throw new Error(await response.text());
-
+			if (!response.ok) throw new Error('Failed to start download');
 
 			const reader = response.body?.getReader();
+			if (!reader) throw new Error('Failed to initialize download stream');
+
 			const contentLength = +(response.headers.get('Content-Length') || 0);
 			let receivedLength = 0;
 			const chunks: Uint8Array[] = [];
 
 			while (true) {
-				const { done, value } = await reader!.read();
+				const { done, value } = await reader.read();
 				if (done) break;
 
 				chunks.push(value);
@@ -134,7 +136,7 @@ export default function Home() {
 				setDownloadProgress(contentLength ? Math.round((receivedLength / contentLength) * 100) : 0);
 			}
 
-			const blob = new Blob(chunks as BlobPart[], { type: 'video/mp4' });
+			const blob = new Blob(chunks.filter(Boolean) as BlobPart[], { type: 'video/mp4' });
 			const downloadUrl = window.URL.createObjectURL(blob);
 			const link = document.createElement('a');
 			link.href = downloadUrl;
@@ -149,9 +151,8 @@ export default function Home() {
 				style: {
 					background: darkMode ? '#1f2937' : '#fff',
 					color: darkMode ? '#fff' : '#374151',
-				}
+				},
 			});
-
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : 'Download failed';
 			toast.error(errorMessage, {
@@ -159,7 +160,7 @@ export default function Home() {
 				style: {
 					background: darkMode ? '#1f2937' : '#fff',
 					color: darkMode ? '#fff' : '#374151',
-				}
+				},
 			});
 		} finally {
 			setIsLoading(false);
@@ -167,7 +168,9 @@ export default function Home() {
 			setDownloadProgress(0);
 		}
 
-	}; if (!isMounted) return null;
+
+
+	};
 
 	return (
 		<main className="min-h-screen transition-colors duration-300 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-blue-900/20">
