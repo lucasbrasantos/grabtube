@@ -113,13 +113,8 @@ export default function Home() {
 				}
 			});
 
-			const response = await fetch('/api/download', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					url: videoUrl,
-					// quality: selectedQuality
-				}),
+			const response = await fetch(`${process.env.API_BASE_URL}/videos/download?url=${videoUrl}`, {
+				method: 'GET',
 			});
 
 			if (!response.ok) throw new Error(await response.text());
